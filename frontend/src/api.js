@@ -1,5 +1,6 @@
 const API_BASE =
-  import.meta.env.VITE_API_BASE || "http://localhost:5000/api/auth";
+  import.meta.env.VITE_API_BASE ||
+  "https://authteachermanager.onrender.com/api/auth";
 
 export async function request(path, method = "GET", body = null) {
   const headers = { "Content-Type": "application/json" };
