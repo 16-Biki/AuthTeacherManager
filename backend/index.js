@@ -8,7 +8,10 @@ const authRoutes = require("./routes/auth");
 dotenv.config();
 const app = express();
 
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
+const FRONTEND_ORIGIN =
+  process.env.FRONTEND_ORIGIN ||
+  "http://localhost:5173" ||
+  "auth-teacher-manager.vercel.app";
 
 app.use(
   cors({
