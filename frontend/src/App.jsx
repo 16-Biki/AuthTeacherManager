@@ -39,7 +39,7 @@ function App() {
       <Nav />
       <div className="container">
         <Routes>
-          {/* Root route: always send first-time visitor to login */}
+          {/* Root route: redirect depending on login */}
           <Route
             path="/"
             element={

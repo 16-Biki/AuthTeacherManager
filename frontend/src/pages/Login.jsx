@@ -9,10 +9,11 @@ export default function Login() {
   const submit = async (e) => {
     e.preventDefault();
     setMsg(null);
+
     try {
       const res = await request("/login", "POST", { email, password });
       localStorage.setItem("user", JSON.stringify(res.user));
-      window.location.href = "/users";
+      window.location.href = "/users"; // redirect after login
     } catch (err) {
       setMsg({ type: "error", text: err.error || "Login failed" });
     }
@@ -22,17 +23,21 @@ export default function Login() {
     <div className="card">
       <h2>Login</h2>
       {msg && <div className={`alert ${msg.type}`}>{msg.text}</div>}
+
       <form onSubmit={submit} className="form">
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
+          type="email"
+          required
         />
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           type="password"
+          required
         />
         <button className="btn">Login</button>
       </form>

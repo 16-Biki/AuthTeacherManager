@@ -31,12 +31,15 @@ export default function Register() {
     <div className="card">
       <h2>Register (Teacher)</h2>
       {msg && <div className={`alert ${msg.type}`}>{msg.text}</div>}
+
       <form onSubmit={submit} className="form">
         <input
           name="email"
           placeholder="Email"
           value={form.email}
           onChange={onChange}
+          type="email"
+          required
         />
         <div className="row">
           <input
@@ -44,12 +47,14 @@ export default function Register() {
             placeholder="First name"
             value={form.first_name}
             onChange={onChange}
+            required
           />
           <input
             name="last_name"
             placeholder="Last name"
             value={form.last_name}
             onChange={onChange}
+            required
           />
         </div>
         <input
@@ -58,12 +63,14 @@ export default function Register() {
           type="password"
           value={form.password}
           onChange={onChange}
+          required
         />
         <input
           name="university_name"
           placeholder="University name"
           value={form.university_name}
           onChange={onChange}
+          required
         />
         <div className="row">
           <input
@@ -71,12 +78,14 @@ export default function Register() {
             placeholder="Gender"
             value={form.gender}
             onChange={onChange}
+            required
           />
           <input
             name="year_joined"
             placeholder="Year joined (e.g. 2015)"
             value={form.year_joined}
             onChange={onChange}
+            required
           />
         </div>
         <button className="btn">Register</button>

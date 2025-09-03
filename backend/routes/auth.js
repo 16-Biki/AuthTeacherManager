@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../db");
 
-// Register API → inserts into both tables
+// ✅ Register
 router.post("/register", async (req, res) => {
   const {
     email,
@@ -38,30 +38,31 @@ router.post("/register", async (req, res) => {
     if (check.rows.length > 0)
       return res.status(400).json({ error: "Email already registered" });
 
-    // Insert into auth_user (plain text password)
+    // insert into auth_user
     const userResult = await pool.query(
-      "INSERT INTO auth_user (email, first_name, last_name, password) VALUES ($1,$2,$3,$4) RETURNING id, email, first_name, last_name",
+      `INSERT INTO auth_user (email, first_name, last_name, password)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id, email, first_name, last_name`,
       [email, first_name, last_name, password]
     );
 
     const userId = userResult.rows[0].id;
 
-    // Insert into teachers
+    // insert into teachers
     await pool.query(
-      "INSERT INTO teachers (user_id, university_name, gender, year_joined) VALUES ($1,$2,$3,$4)",
+      `INSERT INTO teachers (user_id, university_name, gender, year_joined)
+       VALUES ($1, $2, $3, $4)`,
       [userId, university_name, gender, parseInt(year_joined, 10)]
     );
 
     res.json({ message: "User and Teacher registered successfully!" });
   } catch (err) {
     console.error("Error during registration:", err);
-    res
-      .status(500)
-      .json({ error: "Error registering user", detail: err.message });
+    res.status(500).json({ error: "Error registering user" });
   }
 });
 
-// Login API → check email & password (plain text)
+// ✅ Login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -92,7 +93,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Get Users
+// ✅ Get all users
 router.get("/users", async (req, res) => {
   try {
     const result = await pool.query(
@@ -105,11 +106,12 @@ router.get("/users", async (req, res) => {
   }
 });
 
-// Get Teachers
+// ✅ Get all teachers
 router.get("/teachers", async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT t.id, t.university_name, t.gender, t.year_joined, u.email, u.first_name, u.last_name
+      `SELECT t.id, t.university_name, t.gender, t.year_joined, 
+              u.email, u.first_name, u.last_name
        FROM teachers t
        JOIN auth_user u ON t.user_id = u.id`
     );
