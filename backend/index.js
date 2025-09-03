@@ -7,14 +7,10 @@ dotenv.config();
 const app = express();
 
 // ✅ Allowed frontend origins (local + Vercel)
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://auth-teacher-manager.vercel.app",
-];
-
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: ["https://auth-teacher-manager.vercel.app"], // frontend domain
+    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
