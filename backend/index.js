@@ -9,7 +9,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://auth-teacher-manager.vercel.app"], // ✅ must be inside quotes
+    origin: ["https://auth-teacher-manager-ra1r.vercel.app"], // ✅ must be inside quotes
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
