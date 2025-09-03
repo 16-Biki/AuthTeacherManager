@@ -1,24 +1,23 @@
-// Always point to backend API base
-const API_BASE =
-  import.meta.env.VITE_API_BASE ||
-  "https://authteachermanager.onrender.com/api/auth";
+// backend/index.js
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const authRoutes = require("./routes/auth");
 
-export async function request(path, method = "GET", body = null) {
-  const headers = { "Content-Type": "application/json" };
+dotenv.config();
+const app = express();
 
-  const res = await fetch(`${API_BASE}${path}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : null,
-  });
+app.use(cors({
+  origin: [
+    "https://auth-teacher-manager.vercel.app", // frontend Vercel
+    "http://localhost:5173" // local testing
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
 
-  let data;
-  try {
-    data = await res.json();
-  } catch {
-    throw { error: "Invalid response from server" };
-  }
+app.use(express.json());
+app.use("/api/auth", authRoutes);
 
-  if (!res.ok) throw data;
-  return data;
-}
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
