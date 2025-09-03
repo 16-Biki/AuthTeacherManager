@@ -9,8 +9,9 @@ const app = express();
 
 app.use(cors({
   origin: [
-    "https://auth-teacher-manager.vercel.app", // frontend Vercel
-    "http://localhost:5173" // local testing
+    "https://auth-teacher-manager.vercel.app",    // old frontend (if used)
+    "https://auth-teacher-manager-ra1r.vercel.app", // ✅ your deployed frontend
+    "http://localhost:5173"                       // local testing
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
