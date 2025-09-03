@@ -18,25 +18,30 @@ router.post("/register", async (req, res) => {
   }
 
   try {
+    // Check if email already exists
     const check = await pool.query("SELECT id FROM auth_user WHERE email=$1", [email]);
-    if (check.rows.length > 0) return res.status(400).json({ error: "Email already registered" });
+    if (check.rows.length > 0) {
+      return res.status(400).json({ error: "Email already registered" });
+    }
 
+    // Insert into auth_user
     const userResult = await pool.query(
       `INSERT INTO auth_user (email, first_name, last_name, password)
        VALUES ($1, $2, $3, $4)
        RETURNING id, email, first_name, last_name`,
-      [email, first_name, last_name, password]
+      [email, first_name, last_name, password] // keeping password as-is (plain)
     );
 
     const userId = userResult.rows[0].id;
 
+    // Insert into teachers
     await pool.query(
       `INSERT INTO teachers (user_id, university_name, gender, year_joined)
        VALUES ($1, $2, $3, $4)`,
       [userId, university_name, gender, parseInt(year_joined, 10)]
     );
 
-    res.json({ message: "User and Teacher registered successfully!" });
+    res.json({ message: "✅ User and Teacher registered successfully!" });
 
   } catch (err) {
     console.error("❌ Registration error:", err.message);
@@ -54,13 +59,23 @@ router.post("/login", async (req, res) => {
 
   try {
     const result = await pool.query("SELECT * FROM auth_user WHERE email=$1", [email]);
-    if (result.rows.length === 0) return res.status(400).json({ error: "User not found" });
+    if (result.rows.length === 0) {
+      return res.status(400).json({ error: "User not found" });
+    }
 
     const user = result.rows[0];
-    if (user.password !== password) return res.status(400).json({ error: "Invalid password" });
+    if (user.password !== password) {
+      return res.status(400).json({ error: "Invalid password" });
+    }
 
-    const safeUser = { id: user.id, email: user.email, first_name: user.first_name, last_name: user.last_name };
-    res.json({ message: "Login successful", user: safeUser });
+    const safeUser = {
+      id: user.id,
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+    };
+
+    res.json({ message: "✅ Login successful", user: safeUser });
 
   } catch (err) {
     console.error("❌ Login error:", err.message);
